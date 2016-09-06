@@ -1,0 +1,22 @@
+cron:
+
+- description: poll_yahoo
+  url: /track_currencies/yahoo
+  schedule: every 1 minutes
+  retry_parameters:
+    min_backoff_seconds: 1
+    max_doublings: 5
+
+- description: poll_cl
+  url: /track_currencies/cl
+  schedule: every 30 minutes
+  retry_parameters:
+    min_backoff_seconds: 2.5
+    max_doublings: 5
+
+- description: tracking_cleanup
+  url: /track_currencies_cleanup
+  schedule: every 15 minutes
+  retry_parameters:
+    min_backoff_seconds: 2.5
+    max_doublings: 5

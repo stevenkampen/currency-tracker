@@ -1,0 +1,25 @@
+# This file specifies your Python application's runtime configuration
+# including URL routing, versions, static file uploads, etc. See
+# https://developers.google.com/appengine/docs/python/config/appconfig
+# for details.
+
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /track_currencies/yahoo
+  script: track_currencies.poll_yahoo
+  login: admin
+
+- url: /track_currencies/cl
+  script: track_currencies.poll_cl
+  login: admin
+
+- url: /track_currencies_cleanup
+  script: track_currencies.cleanup
+  login: admin
+
+libraries:
+- name: MySQLdb
+  version: "1.2.5"
