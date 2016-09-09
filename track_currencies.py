@@ -15,7 +15,7 @@ pp = pprint.PrettyPrinter(indent=4)
 YAHOO_API_URL = u'http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json'
 CL_API_BASE_URL = 'http://apilayer.net/api/live'
 CL_API_KEY = 'c5cf909e58313ea03dda01ffa45c01d5'
-CL_CURRENCIES_TO_TRACK = ['USD', 'BTC', 'EUR', 'CAD', 'AUD', 'GBP']
+CL_CURRENCIES_TO_TRACK = ['USD', 'BTC', 'EUR', 'CAD', 'AUD', 'GBP', 'XAU']
 
 
 def _poll_cl():
