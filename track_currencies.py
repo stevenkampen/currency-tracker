@@ -13,15 +13,19 @@ import mysql
 pp = pprint.PrettyPrinter(indent=4)
 
 YAHOO_API_URL = u'http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json'
+CL_API_BASE_URL = 'http://apilayer.net/api/live'
 CL_API_KEY = 'c5cf909e58313ea03dda01ffa45c01d5'
-CL_CURRENCIES_API_URL = 'http://apilayer.net/api/live?access_key=' + CL_API_KEY
+CL_CURRENCIES_TO_TRACK = ['USD', 'BTC', 'EUR', 'CAD', 'AUD', 'GBP']
+
 
 def _poll_cl():
-    quotes = json.loads(urllib2.urlopen(CL_CURRENCIES_API_URL).read())['quotes']
-    now = datetime.datetime.now()
-    rows = map(lambda name: [name, quotes[name], now], quotes.keys())
-    big_query.insert_quotes("cl", rows)
-    mysql.insert_quotes("cl", rows)
+    for currency in CL_CURRENCIES_TO_TRACK:
+        u = "%s?source=%s&access_key=%s" % (CL_API_BASE_URL, currency, CL_API_KEY)
+        quotes = json.loads(urllib2.urlopen(u).read())['quotes']
+        now = datetime.datetime.now()
+        rows = map(lambda name: [name, quotes[name], now], quotes.keys())
+        # big_query.insert_quotes("cl", rows)
+        mysql.insert_quotes("cl", rows)
 
 def _poll_yahoo():
     while True:
@@ -36,7 +40,7 @@ def _poll_yahoo():
                 return [quote['name'], quote['price'], now]
             
             rows = map(make_record, quotes['list']['resources'])
-            big_query.insert_quotes("yahoo", rows)
+            # big_query.insert_quotes("yahoo", rows)
             mysql.insert_quotes("yahoo", rows)
             break
         except urllib2.URLError:
@@ -51,6 +55,7 @@ def _poll_yahoo():
             time.sleep(10)
         except KeyError:
             print 'KeyError!'
+            pp.pprint(quotes)
             time.sleep(10)
             continue
 
